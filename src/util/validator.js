@@ -1,4 +1,4 @@
-
+const mongoose = require("mongoose")
 
 // ==> Validation for string
 const isValidstring = function (pass) {
@@ -43,9 +43,15 @@ const isValidpin = function (pincode) {
 
 };
 
+// ==> Validation for Pincode
+const validObjectId = function (Id) {
+    return mongoose.Types.ObjectId.isValid(Id)
+}
 
 
 
 
 
-module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin }
+
+
+module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId}

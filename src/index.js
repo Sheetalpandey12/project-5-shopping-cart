@@ -15,8 +15,4 @@ mongoose.connect(process.env.db,{useNewUrlParser: true})
 
 app.use("/",route);
 
-app.use((req,res) => {
-    return res.status(400).status({status: false, message: "Invalid URL"})
-});
-
 app.listen(process.env.port, () => console.log(`Express app is running on port ${process.env.port}`)); 

@@ -1,12 +1,11 @@
 const userModel = require("../models/userModel")
 const { uploadFile } = require("../aws/aws")
 const bcrypt = require("bcrypt")
-const { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin } = require("../util/validator")
+const { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId } = require("../util/validator")
 const jwt = require("jsonwebtoken")
 
 
 // <==========================================> CREATE USER <==========================================>//
-
 
 const createUser = async (req, res) => {
     try {
@@ -16,7 +15,7 @@ const createUser = async (req, res) => {
         // ==> Validations 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "All fields are manndatory" })
         let { fname, lname, email, phone, password, address, profileImage } = data //Destructuring
-      
+
         if (!fname) return res.status(400).send({ status: false, message: "fname is mandatory" })
         if (!isValidstring(fname)) return res.status(400).send({ status: false, message: "Enter Valid fname" })
 
@@ -84,8 +83,9 @@ const createUser = async (req, res) => {
     }
 }
 
+// <==========================================> LOGIN USER <==========================================>//
 
-const loginUser = async function (req, res) {
+const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -103,7 +103,7 @@ const loginUser = async function (req, res) {
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) { return res.status(400).send({ Status: false, message: "incorrect credential" }) }
 
-        const token = jwt.sign({ user: user._id, expiresIn: "24h" }, "Group12")
+        const token = jwt.sign({ user: user._id, expiresIn: "24h" }, "Project5-Group12")
 
         return res.status(200).send({ status: true, message: "User login successfull", data: { userId: user._id, token } })
     }
@@ -112,6 +112,24 @@ const loginUser = async function (req, res) {
     }
 }
 
+// <==========================================> GET USER <==========================================>//
+
+const getUser = async (req, res) => {
+    try {
+        const userId = req.params.userId
+
+        if (!validObjectId(userId)) return res.status(400).send({status: false, message: "Please provide valid User id"})
+
+        let userData = await userModel.findOne({_id: userId})
+        if(!userData) return res.status(404).send({status: false, message: "User not found"})
+         
+        return res.status(200).send({status: true, message: "User profile details", data: userData})
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, message: err.message })
+    }
+}
 
 
-module.exports = { createUser, loginUser }
+
+module.exports = { createUser, loginUser, getUser }
