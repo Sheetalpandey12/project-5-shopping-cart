@@ -7,7 +7,7 @@ const urlSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true, trim: true},
     profileImage: {type: String, required: true},  // s3 link
     phone: {type: String, required: true, unique: true, trim: true},
-    password: {type: String, required: true, minlength: 8, maxlength: 15},
+    password: {type: String, required: true},
     address: {
         shipping: {
             street: {type: String, required: true, trim: true},
