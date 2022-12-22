@@ -91,10 +91,10 @@ const loginUser = async (req, res) => {
 
         if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, message: "Please provide some detail" })
 
-        if (!email) return res.status(400).send({ status: false, message: "Please provide EmailId" })
+        if (!isEmpty(email)) return res.status(400).send({ status: false, message: "Please provide EmailId" })
         if (!isValidemail(email)) return res.status(400).send({ status: false, message: "Email is Invalid" })
 
-        if (!password) return res.status(400).send({ status: false, message: "Please provide Password" })
+        if (!isEmpty(password)) return res.status(400).send({ status: false, message: "Please provide Password" })
         if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
 
         const user = await userModel.findOne({ email })

@@ -1,5 +1,5 @@
 const productModel = require("../models/productModel")
-const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId } = require("../util/validator")
+const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId, isEmpty } = require("../util/validator")
 const { uploadFile } = require("../aws/aws")
 
 
@@ -11,22 +11,22 @@ const createProduct = async (req, res) => {
 
         if (Object.keys(data) == 0) return res.status(400).send({ status: false, message: "All fields are manndatory" })
 
-        if (!title) { return res.status(400).send({ status: false, message: "Title is mandatory" }); }
+        if (!isEmpty(title)) { return res.status(400).send({ status: false, message: "Title is mandatory" }); }
         if (!isValidTD(title)) return res.status(400).send({ status: false, message: "Title should be in alphabets only" })
 
         let findtitle = await productModel.findOne({ title })
         if (findtitle) return res.status(400).send({ status: false, message: " this title already exists" })
 
-        if (!description) { return res.status(400).send({ status: false, message: "description is mandatory" }); }
+        if (!isEmpty(description)) { return res.status(400).send({ status: false, message: "description is mandatory" }); }
         if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
 
-        if (!price) return res.status(400).send({ status: false, message: "Price is mandatory" })
+        if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
         if (!isValidNum(price) && !isValidPrice(price)) return res.status(400).send({ status: false, message: "Price should be in Number" })
 
-        if (!currencyId) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
+        if (!isEmpty(currencyId)) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
         if (currencyId && currencyId != "INR") return res.status(400).send({ status: false, message: "Only 'INR' CurrencyId is allowed" })
 
-        if (!currencyFormat) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
+        if (!isEmpty(currencyFormat)) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
         if (currencyFormat && currencyFormat != "₹") return res.status(400).send({ status: false, message: "Only '₹' Currency Symbol is allowed" })
 
         if (file.length === 0) return res.status(400).send({ status: false, message: "productImage is mandatory" })
