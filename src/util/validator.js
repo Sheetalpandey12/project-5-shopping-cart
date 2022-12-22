@@ -12,10 +12,10 @@ const isValidemail = function (email) {
 
 // ==> Validation for phone
 const isValidphone = function (phone) {
-    return (/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/).test(phone);
+    return (/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/).test(phone);
 }
 
-// ==> Validation for phone
+// ==> Validation for file
 const isValidfile = function (filename) {
     return (/^.*\.(jfif|png|jpg|JPG|gif|GIF|webp|tiff?|bmp)$/).test(filename)
 };
@@ -48,10 +48,25 @@ const validObjectId = function (Id) {
     return mongoose.Types.ObjectId.isValid(Id)
 }
 
+// ==> Validation for Pincode
+const isValidNum = function (price) {
+    return (/^[0-9]*$/).test(price)
+}
+
+//==> Validation for availableSizes
+const isValidTitleEnum = (title) =>["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(title) !== -1;
+
+
+//==> Validation for Title & Description
+const isValidTD = function (y) {
+    return (/^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/).test(y)     
+}
+
+//==> Validation for Price
+const isValidPrice = (value) => {
+    return (/^[1-9]\d{0,8}(?:\.\d{1,2})?$/).test(value)
+  };
 
 
 
-
-
-
-module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId}
+module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId, isValidNum, isValidTitleEnum, isValidTD, isValidPrice }

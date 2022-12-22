@@ -8,9 +8,9 @@ const authentication = async (req, res, next) => {
         if (!token) return res.status(400).send({ status: false, message: "Token must be present" })
 
         jwt.verify(token, "Project5-Group12", (err, resolve) => {
-            if (err) return res.status(400).send({ status: false, message: err.message })
+            if (err) return res.status(401).send({ status: false, message: err.message })
 
-            req['user'] = resolve
+            req['user'] = resolve.user
             next()
         })
     }
