@@ -54,19 +54,30 @@ const isValidNum = function (price) {
 }
 
 //==> Validation for availableSizes
-const isValidTitleEnum = (title) =>["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(title) !== -1;
+const isValidTitleEnum = (title) => ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(title) !== -1;
 
 
 //==> Validation for Title & Description
 const isValidTD = function (y) {
-    return (/^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/).test(y)     
+    return (/^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/).test(y)
 }
 
 //==> Validation for Price
-const isValidPrice = (value) => {
+const isValidPrice = function(value) {
     return (/^[1-9]\d{0,8}(?:\.\d{1,2})?$/).test(value)
-  };
+};
+
+//==> Validation for Style
+const isValidStyle = function (value) {
+    return (/^[a-zA-Z _.-]+$/).test(value);
+};
+
+//==> Validation for removeProduct
+const isValidRP = function (removeProduct) {
+    return (/^[0-1]$/).test(removeProduct)
+}
 
 
 
-module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId, isValidNum, isValidTitleEnum, isValidTD, isValidPrice }
+
+module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId, isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidStyle, isValidRP }

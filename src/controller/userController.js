@@ -35,7 +35,7 @@ const createUser = async (req, res) => {
         }
 
         if (files.length === 0) return res.status(400).send({ status: false, message: "profileImage is mandatory" })
-          if (!isValidfile(files[0].originalname)) return res.status(400).send({ status: false, message: "ProfileImage is Invalid." })
+        if (!isValidfile(files[0].originalname)) return res.status(400).send({ status: false, message: "ProfileImage is Invalid." })
 
         if (!isEmpty(password)) return res.status(400).send({ status: false, message: "password is mandatory" })
         if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
@@ -118,6 +118,7 @@ const getUser = async (req, res) => {
     try {
         const userId = req.params.userId
 
+        if(!isEmpty(userId)) return res.status(400).send({ status: false, message: "please provide user Id" })
         if (!validObjectId(userId)) return res.status(400).send({ status: false, message: "Please provide valid User id" })
 
         let userData = await userModel.findOne({ _id: userId })
@@ -138,6 +139,7 @@ const updateUser = async (req, res) => {
         const data = req.body
         const file = req.files
 
+        if(!isEmpty(userId)) return res.status(400).send({ status: false, message: "please provide user Id" })
         if (!validObjectId(userId)) return res.status(400).send({ status: false, message: "Please provide valid User id" })
 
         const userData = await userModel.findOne({ _id: userId })
@@ -145,8 +147,8 @@ const updateUser = async (req, res) => {
 
         if (req.user !== userId) return res.status(403).send({ status: false, message: "user is not Authorised for this operation" })
 
-        if (Object.keys(data).length == 0 && (!file || file.length == 0)) return res.status(400).send({ status: false, message: "Please Provide data" })
-        let { fname, lname, email, phone, password, address } = data;
+        if (Object.keys(data).length == 0 && (!file || file.length == 0)) return res.status(400).send({ status: false, message: "Please Provide data for Update" })
+        let { fname, lname, email, phone, password, address, profileImage } = data;
 
         if (fname || fname == "") {
             if (!isEmpty(fname)) return res.status(400).send({ status: false, message: "Please Provide first name" })
@@ -183,42 +185,36 @@ const updateUser = async (req, res) => {
 
             if (shipping) {
                 if (!shipping) return res.status(400).send({ status: false, message: "shipping is mandatory" })
-                if (shipping.street) {
-                    if (!isEmpty(shipping.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
-                    if (!isValidStreet(shipping.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
-                }
-                if (shipping.city) {
-                    if (!isEmpty(shipping.city)) return res.status(400).send({ status: false, message: "Shipping city is required" })
-                    if (!isValidstring(shipping.city)) return res.status(400).send({ status: false, message: "Enter Valid shipping city" })
-                }
-                if (shipping.pincode) {
-                    if (!isEmpty(shipping.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
-                    if (!isValidpin(shipping.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
-                }
+
+                if (!isEmpty(shipping.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
+                if (!isValidStreet(shipping.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
+
+                if (!isEmpty(shipping.city)) return res.status(400).send({ status: false, message: "Shipping city is required" })
+                if (!isValidstring(shipping.city)) return res.status(400).send({ status: false, message: "Enter Valid shipping city" })
+
+                if (!isEmpty(shipping.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
+                if (!isValidpin(shipping.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
             }
             if (billing) {
                 if (!billing) return res.status(400).send({ status: false, message: "billing is mandatory" })
-                if (billing) {
-                    if (billing.street) {
-                        if (!isEmpty(billing.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
-                        if (!isValidStreet(billing.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
-                    }
-                    if (billing.city) {
-                        if (!isEmpty(billing.city)) return res.status(400).send({ status: false, message: "Shipping city is required" })
-                        if (!isValidstring(billing.city)) return res.status(400).send({ status: false, message: "Enter Valid shipping city" })
-                    }
-                    if (billing.pincode) {
-                        if (!isEmpty(billing.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
-                        if (!isValidpin(billing.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
-                    }
-                }
-            }
-        }
-        data.address = address
 
-        if (file.length !== 0) {
-            if ( file.length === 0) return res.status(400).send({ status: false, message: "productImage is mandatory" })
-             if (!isValidfile(file[0].originalname))  return res.status(400).send({ status: false, message: "ProfileImage is Invalid." })
+                if (!isEmpty(billing.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
+                if (!isValidStreet(billing.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
+
+                if (!isEmpty(billing.city)) return res.status(400).send({ status: false, message: "Shipping city is required" })
+                if (!isValidstring(billing.city)) return res.status(400).send({ status: false, message: "Enter Valid shipping city" })
+
+                if (!isEmpty(billing.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
+                if (!isValidpin(billing.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
+
+            }
+            data.address = address
+        }
+
+
+        if (file.length !== 0 || profileImage == "") {
+            if (file.length === 0) return res.status(400).send({ status: false, message: "profileImage is mandatory" })
+            if (!isValidfile(file[0].originalname)) return res.status(400).send({ status: false, message: "ProfileImage is Invalid." })
 
             let profilepic = await uploadFile(file[0])
             data.profileImage = profilepic
@@ -229,7 +225,6 @@ const updateUser = async (req, res) => {
     }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
-
     }
 }
 
