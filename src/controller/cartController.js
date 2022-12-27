@@ -32,9 +32,6 @@ const createCart = async (req, res) => {
         if (isNaN(quantity)) return res.status(400).send({ status: false, message: "quntity should be number" })
 
         if (cartId) {
-            if (!isEmpty(cartId)) return res.status(400).send({ status: false, message: "please provide cartId" })
-            if (!validObjectId(cartId)) return res.status(400).send({ status: false, message: "Invalid cartId" })
-
             const cart = await cartModel.findOne({ _id: cartId })
             if (!cart) return res.status(404).send({ status: false, message: "cart not found" })
         }
@@ -42,6 +39,8 @@ const createCart = async (req, res) => {
         const cartExist = await cartModel.findOne({ userId })
 
         if (cartExist) {
+            if (!isEmpty(cartId)) return res.status(400).send({ status: false, message: "please provide cartId" })
+            if (!validObjectId(cartId)) return res.status(400).send({ status: false, message: "Invalid cartId" })
             if (cartExist._id.toString() !== cartId) return res.status(400).send({ status: false, message: "Cart does not belong to this user" })
 
             // ==> That product which is already in the cart 🛒 

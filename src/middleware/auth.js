@@ -9,8 +9,10 @@ const authentication = async (req, res, next) => {
         token = token.slice(7)  // bearer Token = Token 
 
         jwt.verify(token, "Project5-Group12", (err, resolve) => {
-            if (err) return res.status(401).send({ status: false, message: err.message })
-
+            if(err){
+                if (err.name === "TokenExpiredError") return res.status(401).send({ status: false, message: "JWT is expired, Please login again"});
+                if (err.name === "JsonWebTokenError") return res.status(401).send({status: false, message: "Invalid Token, Please login again"});   
+        }
             req['user'] = resolve.user
             next()
         })

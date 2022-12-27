@@ -28,13 +28,15 @@ const creatOrder = async (req, res) => {
         const findCart = await cartModel.findOne({ _id: cartId })
         if (!findCart) return res.status(404).send({ status: false, message: "cart not found" })
 
+        if (req.user !== findCart.userId.toString()) return res.status(403).send({ status: false, message: "user is not Authorised for this operation" })
+
         if (findCart.items.length == 0) return res.status(400).send({ status: false, message: "cart is empty, please add product to proceed your order" })
 
         if (cancellable) {
             cancellable = cancellable.toLowerCase()
             if (cancellable !== "true" && cancellable !== "false")
                 return res.status(400).send({ status: false, Message: "Cancellable Value must be boolean" })
-                obj.cancellable = cancellable
+            obj.cancellable = cancellable
         }
 
         let { items, totalPrice, totalItems } = findCart
@@ -57,8 +59,8 @@ const creatOrder = async (req, res) => {
 }
 
 
-const updateOrder = async (req,res) => {
-    try{
+const updateOrder = async (req, res) => {
+    try {
         let data = req.body
         let { orderId, status } = data
         let userId = req.params.userId
@@ -76,28 +78,28 @@ const updateOrder = async (req,res) => {
         if (!isEmpty(orderId)) return res.status(400).send({ status: false, message: "OrderId is required" })
         if (!validObjectId(orderId)) return res.status(400).send({ status: false, message: "Invalid order Id" })
 
-        if(!isEmpty(status)) return res.status(400).send({ status: false, message: "Status is required" })
-        if(!["completed", "cancelled"].includes(status)) return res.status(400).send({ status: false, message: "Status should only Completed or cancelled" })
+        if (!isEmpty(status)) return res.status(400).send({ status: false, message: "Status is required" })
+        if (!["completed", "cancelled"].includes(status)) return res.status(400).send({ status: false, message: "Status should only Completed or cancelled" })
 
         const checkOrderStatus = await orderModel.findById(orderId)
 
-        if(status){
-        if (checkOrderStatus.status == "completed" && [status == "cancelled" || status == "completed"])
-        return res.status(400).send({ status: false, message: "Order is already completed" })
+        if (status) {
+            if (checkOrderStatus.status == "completed" && [status == "cancelled" || status == "completed"])
+                return res.status(400).send({ status: false, message: "Order is already completed" })
 
-        if (checkOrderStatus.status == "cancelled" && [status == "cancelled" || status == "completed"])
-        return res.status(400).send({ status: false, message: "Order is already cancelled " })
+            if (checkOrderStatus.status == "cancelled" && [status == "cancelled" || status == "completed"])
+                return res.status(400).send({ status: false, message: "Order is already cancelled " })
 
-        if (checkOrderStatus.cancellable == false  && status == "cancelled" ) 
-        return res.status(400).send({ status: false, message: "Sorry ! This Order is not Cancellable " })
+            if (checkOrderStatus.cancellable == false && status == "cancelled")
+                return res.status(400).send({ status: false, message: "Sorry ! This Order is not Cancellable " })
         }
-        
-        const update = await orderModel.findOneAndUpdate({ _id: orderId }, { $set: {status} }, { new: true })
+
+        const update = await orderModel.findOneAndUpdate({ _id: orderId }, { $set: { status } }, { new: true })
         if (!update) { return res.status(404).send({ status: false, message: "Order not found With given OrderId" }) }
 
         return res.status(200).send({ status: true, message: "Status Updated Succesfully", data: update })
     }
-    catch(err){
+    catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
