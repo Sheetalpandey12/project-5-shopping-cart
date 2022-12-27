@@ -33,10 +33,9 @@ const creatOrder = async (req, res) => {
         if (findCart.items.length == 0) return res.status(400).send({ status: false, message: "cart is empty, please add product to proceed your order" })
 
         if (cancellable) {
-            cancellable = cancellable.toLowerCase()
-            if (cancellable !== "true" && cancellable !== "false")
+            if (cancellable !== true && cancellable !== false)
                 return res.status(400).send({ status: false, Message: "Cancellable Value must be boolean" })
-            obj.cancellable = cancellable
+            data.cancellable = cancellable
         }
 
         let { items, totalPrice, totalItems } = findCart
@@ -57,6 +56,8 @@ const creatOrder = async (req, res) => {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
+
+// <==========================================> UPDATE ORDER <==========================================>//
 
 
 const updateOrder = async (req, res) => {

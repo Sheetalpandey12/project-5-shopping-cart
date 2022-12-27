@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(multer().any())
 
 app.use((err, req, res, next) => {
-    if (err.message === "Unexpected end of JSON input") {
+    if (err.message === "Unexpected end of JSON input" || "Unexpected string in JSON at position") {
         return res.status(400).send({ status: false, message: "ERROR Parsing Data, Please Provide a Valid JSON" })
     } else { next() }
 });

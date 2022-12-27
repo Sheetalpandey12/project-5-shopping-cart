@@ -31,7 +31,10 @@ const createCart = async (req, res) => {
         quantity = quantity || 1
         if (isNaN(quantity)) return res.status(400).send({ status: false, message: "quntity should be number" })
 
-        if (cartId) {
+        if (cartId || cartId == "") {
+            if (!isEmpty(cartId)) return res.status(400).send({ status: false, message: "please provide cartId" })
+            if (!validObjectId(cartId)) return res.status(400).send({ status: false, message: "Invalid cartId" })
+            
             const cart = await cartModel.findOne({ _id: cartId })
             if (!cart) return res.status(404).send({ status: false, message: "cart not found" })
         }
@@ -39,9 +42,8 @@ const createCart = async (req, res) => {
         const cartExist = await cartModel.findOne({ userId })
 
         if (cartExist) {
-            if (!isEmpty(cartId)) return res.status(400).send({ status: false, message: "please provide cartId" })
-            if (!validObjectId(cartId)) return res.status(400).send({ status: false, message: "Invalid cartId" })
-            if (cartExist._id.toString() !== cartId) return res.status(400).send({ status: false, message: "Cart does not belong to this user" })
+            if (!isEmpty(cartId)) return res.status(400).send({ status: false, message: "This user has already cart Id so please provide cartId" })
+            if (cartExist._id.toString() !== cartId) return res.status(403).send({ status: false, message: "Cart does not belong to this user, user is not Authorised for this operation " })
 
             // ==> That product which is already in the cart 🛒 
             for (let i = 0; i < (cartExist.items).length; i++) {
@@ -116,9 +118,9 @@ const updatCart = async (req, res) => {
 
         let items = cartExist.items
 
-        for (let i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {                                 
             if (items[i].productId == productId) {
-                let updatePrice = items[i].quantity * productExist.price
+                let updatePrice = items[i].quantity * productExist.price               
 
                 if (removeProduct == 0) {
                     let productRemoved = await cartModel.findOneAndUpdate({ _id: cartId },
@@ -198,7 +200,7 @@ const deleteCart = async (req,res) => {
         if (checkCart.totalItems == 0) return res.status(400).send({ status: false, message: "Cart is already empty" })
         if (!checkCart) return res.status(404).send({ status: true, message: 'Cart Not Found' })
 
-        return res.status(200).send({ status: true, message: "Cart Deleted successfully" })
+        return res.status(204).send({ status: true, message: "Cart Deleted successfully" })
     }
     catch(err){
         return res.status(500).send({status: false, message: err.message})

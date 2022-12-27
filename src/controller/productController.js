@@ -159,7 +159,7 @@ const updateProductById = async (req, res) => {
         }
         if (price || price == "") {
             if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
-            if (!isValidNum(price) && !isValidPrice(price)) return res.status(400).send({ status: false, message: "Price should be in Number" })
+            if (!isValidNum(price) && !isValidPrice(price)) return res.status(400).send({ status: false, message: "Price should be in valid Number" })
         }
         if (isFreeShipping || isFreeShipping == "") {
             if (!(isFreeShipping == "true" || isFreeShipping == "false"))
@@ -203,7 +203,6 @@ const delProductById = async (req, res) => {
         let delProduct = await productModel.findOneAndUpdate({ _id: productId, isDeleted: false, },
             { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
 
-        if (delProduct.isDeleted == true) return res.status(404).send({ status: false, message: "Product is already deleted" })
         if (!delProduct) return res.status(404).send({ status: false, message: "No product found by given ProductId" })
 
         return res.status(200).send({ status: true, message: "Product Deleted Succesfully" })

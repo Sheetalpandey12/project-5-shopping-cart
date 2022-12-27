@@ -48,7 +48,7 @@ const validObjectId = function (Id) {
     return mongoose.Types.ObjectId.isValid(Id)
 }
 
-// ==> Validation for Pincode
+// ==> Validation for Number
 const isValidNum = function (price) {
     return (/^[0-9]*$/).test(price)
 }
@@ -57,9 +57,14 @@ const isValidNum = function (price) {
 const isValidTitleEnum = (title) => ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(title) !== -1;
 
 
-//==> Validation for Title & Description
+//==> Validation for Title 
 const isValidTD = function (y) {
     return (/^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/).test(y)
+}
+
+//==> Validation for  Description
+const isValidDes = function (y) {
+    return (/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/).test(y)
 }
 
 //==> Validation for Price
