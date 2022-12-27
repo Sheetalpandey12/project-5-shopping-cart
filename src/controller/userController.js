@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
         if (!isValidfile(files[0].originalname)) return res.status(400).send({ status: false, message: "ProfileImage is Invalid." })
 
         if (!isEmpty(password)) return res.status(400).send({ status: false, message: "password is mandatory" })
-        if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
+        if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Password Should be (8-15) in length with one upperCase, special character and number" })
 
         if (!address) return res.status(400).send({ status: false, message: "Please enter address for shipping and billing purpose" })
 
@@ -174,7 +174,7 @@ const updateUser = async (req, res) => {
         }
         if (password) {
             if (!password) return res.status(400).send({ status: false, message: "password is mandatory" })
-            if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
+            if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Password Should be (8-15) in length with one upperCase, special character and number" })
 
             const encrypt = bcrypt.hashSync(password, 10);
             data.password = encrypt;
@@ -183,9 +183,8 @@ const updateUser = async (req, res) => {
             address = JSON.parse(address)
             let { shipping, billing } = address
 
+            if (!shipping) return res.status(400).send({ status: false, message: "shipping is mandatory" })
             if (shipping) {
-                if (!shipping) return res.status(400).send({ status: false, message: "shipping is mandatory" })
-
                 if (!isEmpty(shipping.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
                 if (!isValidStreet(shipping.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
 
@@ -195,9 +194,8 @@ const updateUser = async (req, res) => {
                 if (!isEmpty(shipping.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
                 if (!isValidpin(shipping.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
             }
+            if (!billing) return res.status(400).send({ status: false, message: "billing is mandatory" })
             if (billing) {
-                if (!billing) return res.status(400).send({ status: false, message: "billing is mandatory" })
-
                 if (!isEmpty(billing.street)) return res.status(400).send({ status: false, message: "Shipping street is required" })
                 if (!isValidStreet(billing.street)) return res.status(400).send({ status: false, message: "Enter Valid shipping street" })
 

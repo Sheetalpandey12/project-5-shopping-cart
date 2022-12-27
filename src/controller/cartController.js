@@ -51,7 +51,7 @@ const createCart = async (req, res) => {
                     cartExist.items[i].quantity = Math.round(Number(cartExist.items[i].quantity) + Number(quantity))
                     cartExist.totalPrice = Math.round(cartExist.totalPrice + ((quantity) * (productExist.price)))
 
-                    const cartUpdate = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true })
+                    const cartUpdate = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true }).select({'items._id':0})
                     return res.status(200).send({ status: true, message: "Success", data: cartUpdate })
                 }
             }                                                                          
@@ -60,7 +60,7 @@ const createCart = async (req, res) => {
             cartExist.totalItems = cartExist.totalItems + 1
             cartExist.totalPrice = Math.round(cartExist.totalPrice + ((quantity) * (productExist.price)))
 
-            const newProduct = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true })
+            const newProduct = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true }).select({'items._id':0})
             return res.status(201).send({ status: true, message: "Success", data: newProduct })
         }
         // ==> For creating new cart 🛒
@@ -72,7 +72,8 @@ const createCart = async (req, res) => {
             totalItems: 1
         }
         const newCart = await cartModel.create(obj)
-        return res.status(201).send({ status: true, message: "Success", data: newCart })
+        const createNewCart = await cartModel.findOne({userId}).select({'items._id':0})
+        return res.status(201).send({ status: true, message: "Success", data: createNewCart })
     }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })

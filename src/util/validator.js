@@ -25,7 +25,7 @@ const isValidpassword = function (pass) {
     return (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])[a-zA-Z0-9@#$%&]{8,15}$/).test(pass);
 }
 
-// ==> Validation for Address field
+// ==> Validation for Empty or not
 const isEmpty = function (value) {
     if (typeof value == "undefined" || value == null) return false;
     if (typeof value == "string" && value.trim().length == 0) return false;          
@@ -43,7 +43,7 @@ const isValidpin = function (pincode) {
 
 };
 
-// ==> Validation for Pincode
+// ==> Validation for Object Id
 const validObjectId = function (Id) {
     return mongoose.Types.ObjectId.isValid(Id)
 }
@@ -85,4 +85,4 @@ const isValidRP = function (removeProduct) {
 
 
 
-module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId, isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidStyle, isValidRP }
+module.exports = { isValidstring, isValidemail, isValidphone, isValidfile, isValidpassword, isEmpty, isValidStreet, isValidpin, validObjectId, isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidStyle, isValidRP, isValidDes }
