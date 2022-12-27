@@ -30,8 +30,8 @@ const createUser = async (req, res) => {
 
         let alreadyExits = await userModel.findOne({ $or: [{ email }, { phone }] })
         if (alreadyExits) {
-            if (alreadyExits.email == email) return res.status(409).send({ status: false, message: `This ${email} already registered` })
-            else if (alreadyExits.phone == phone) return res.status(409).send({ status: false, message: `This ${phone} already registered` })
+            if (alreadyExits.email == email) return res.status(400).send({ status: false, message: `This ${email} already registered` })
+            else if (alreadyExits.phone == phone) return res.status(400).send({ status: false, message: `This ${phone} already registered` })
         }
 
         if (files.length === 0) return res.status(400).send({ status: false, message: "profileImage is mandatory" })
@@ -98,10 +98,10 @@ const loginUser = async (req, res) => {
         if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
 
         const user = await userModel.findOne({ email })
-        if (!user) { return res.status(400).send({ status: false, message: "Please provide correct email" }) }
+        if (!user) { return res.status(404).send({ status: false, message: "Please provide correct email" }) }
 
         const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) { return res.status(400).send({ Status: false, message: "incorrect credential" }) }
+        if (!isMatch) { return res.status(401).send({ Status: false, message: "incorrect credential" }) }
 
         const token = jwt.sign({ user: user._id}, "Project5-Group12",{ expiresIn: "48h"} )
 
@@ -163,14 +163,14 @@ const updateUser = async (req, res) => {
             if (!isValidemail(email)) return res.status(400).send({ status: false, message: "Enter Valid email" })
 
             const checkEmail = await userModel.findOne({ email })
-            if (checkEmail) return res.status(409).send({ status: false, message: "email id already exist" })
+            if (checkEmail) return res.status(400).send({ status: false, message: "email id already exist" })
         }
         if (phone || phone == "") {
             if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "Please Provide phone number" })
             if (!isValidphone(phone)) return res.status(400).send({ status: false, message: "Enter Valid phone number" })
 
             const checkPhone = await userModel.findOne({ phone })
-            if (checkPhone) return res.status(409).send({ status: false, message: "phone number already exist" })
+            if (checkPhone) return res.status(400).send({ status: false, message: "phone number already exist" })
         }
         if (password) {
             if (!password) return res.status(400).send({ status: false, message: "password is mandatory" })

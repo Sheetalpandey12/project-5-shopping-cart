@@ -52,7 +52,7 @@ const createCart = async (req, res) => {
                     cartExist.totalPrice = Math.round(cartExist.totalPrice + ((quantity) * (productExist.price)))
 
                     const cartUpdate = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true }).select({'items._id':0})
-                    return res.status(200).send({ status: true, message: "Success", data: cartUpdate })
+                    return res.status(201).send({ status: true, message: "Success", data: cartUpdate })
                 }
             }                                                                          
             // ==> Added new product in cart 🛒

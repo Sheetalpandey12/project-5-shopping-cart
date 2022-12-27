@@ -142,7 +142,7 @@ const updateProductById = async (req, res) => {
         if (!validObjectId(productId)) return res.status(400).send({ status: false, message: "Please provide valid Product Id" })
 
         const productData = await productModel.findOne({ _id: productId, isDeleted: false })
-        if (!productData) return res.status(400).send({ status: false, message: "Product not found" })
+        if (!productData) return res.status(404).send({ status: false, message: "Product not found" })
 
         if (Object.keys(data).length == 0 && (!file || file.length == 0)) return res.status(400).send({ status: false, message: "Please Provide data" })
 
