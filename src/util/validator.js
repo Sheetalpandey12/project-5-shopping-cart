@@ -57,7 +57,7 @@ const isValidNum = function (price) {
 const isValidTitleEnum = (title) => ["S", "XS", "M", "X", "L", "XXL", "XL"].indexOf(title) !== -1;
 
 
-//==> Validation for Title 
+//==> Validation for Title & Description
 const isValidTD = function (y) {
     return (/^[a-zA-Z]+(([a-zA-Z ])?[a-zA-Z]*)*$/).test(y)
 }

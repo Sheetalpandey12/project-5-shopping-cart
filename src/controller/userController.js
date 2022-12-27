@@ -95,7 +95,7 @@ const loginUser = async (req, res) => {
         if (!isValidemail(email)) return res.status(400).send({ status: false, message: "Email is Invalid" })
 
         if (!isEmpty(password)) return res.status(400).send({ status: false, message: "Please provide Password" })
-        if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Enter Valid password" })
+        if (!isValidpassword(password)) return res.status(400).send({ status: false, message: "Password Should be (8-15) in length with one upperCase, special character and number" })
 
         const user = await userModel.findOne({ email })
         if (!user) { return res.status(404).send({ status: false, message: "Please provide correct email" }) }

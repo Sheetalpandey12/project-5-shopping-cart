@@ -1,5 +1,5 @@
 const productModel = require("../models/productModel")
-const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId, isEmpty, isValidStyle, isValidDes } = require("../util/validator")
+const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId, isEmpty, isValidStyle } = require("../util/validator")
 const { uploadFile } = require("../aws/aws")
 
 // <==========================================> CREATE PRODUCT <==========================================>//
@@ -19,7 +19,7 @@ const createProduct = async (req, res) => {
         if (findtitle) return res.status(400).send({ status: false, message: " this title already exists" })
 
         if (!isEmpty(description)) return res.status(400).send({ status: false, message: "description is mandatory" });
-        if (!isValidDes(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
+        if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
 
         if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
         if (!isValidNum(price) && !isValidPrice(price)) return res.status(400).send({ status: false, message: "Price should be in Number" })
@@ -155,7 +155,7 @@ const updateProductById = async (req, res) => {
         }
         if (description || description == "") {
             if (!isEmpty(description)) return res.status(400).send({ status: false, message: "description is mandatory" });
-            if (!isValidDes(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
+            if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
         }
         if (price || price == "") {
             if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
