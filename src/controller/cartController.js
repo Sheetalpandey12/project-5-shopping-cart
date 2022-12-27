@@ -39,7 +39,7 @@ const createCart = async (req, res) => {
             if (!cart) return res.status(404).send({ status: false, message: "cart not found" })
         }
 
-        const cartExist = await cartModel.findOne({ userId }).lean()
+        const cartExist = await cartModel.findOne({ userId })
 
         if (cartExist) {
             if (cartExist._id.toString() !== cartId) return res.status(400).send({ status: false, message: "Cart does not belong to this user" })
@@ -53,7 +53,7 @@ const createCart = async (req, res) => {
                     const cartUpdate = await cartModel.findOneAndUpdate({ _id: cartId }, cartExist, { new: true })
                     return res.status(200).send({ status: true, message: "Success", data: cartUpdate })
                 }
-            }
+            }                                                                          
             // ==> Added new product in cart 🛒
             cartExist.items.push({ productId: productId, quantity: Math.round(quantity) })
             cartExist.totalItems = cartExist.totalItems + 1

@@ -27,7 +27,7 @@ const createProduct = async (req, res) => {
         if (!isEmpty(currencyId)) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
         if (currencyId && currencyId != "INR") return res.status(400).send({ status: false, message: "Only 'INR' CurrencyId is allowed" })
 
-        if (!isEmpty(currencyFormat)) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
+        if (!isEmpty(currencyFormat)) return res.status(400).send({ status: false, message: "currencyFormat is mandatory" })
         if (currencyFormat && currencyFormat != "₹") return res.status(400).send({ status: false, message: "Only '₹' Currency Symbol is allowed" })
 
         if (file.length === 0) return res.status(400).send({ status: false, message: "productImage is mandatory" })

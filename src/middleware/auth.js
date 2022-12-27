@@ -4,8 +4,9 @@ const jwt = require("jsonwebtoken")
 
 const authentication = async (req, res, next) => {
     try {
-        const token = req.headers["x-api-key"]
+        let token = req.headers['authorization']
         if (!token) return res.status(400).send({ status: false, message: "Token must be present" })
+        token = token.slice(7)  // bearer Token = Token 
 
         jwt.verify(token, "Project5-Group12", (err, resolve) => {
             if (err) return res.status(401).send({ status: false, message: err.message })

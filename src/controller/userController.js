@@ -116,7 +116,7 @@ const loginUser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        const userId = req.params.userId
+        let userId = req.params.userId
 
         if(!isEmpty(userId)) return res.status(400).send({ status: false, message: "please provide user Id" })
         if (!validObjectId(userId)) return res.status(400).send({ status: false, message: "Please provide valid User id" })
