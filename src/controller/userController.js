@@ -204,7 +204,6 @@ const updateUser = async (req, res) => {
 
                 if (!isEmpty(billing.pincode)) return res.status(400).send({ status: false, message: "Shipping pincode is required" })
                 if (!isValidpin(billing.pincode)) return res.status(400).send({ status: false, message: "Enter Valid shipping pincode" })
-
             }
             data.address = address
         }

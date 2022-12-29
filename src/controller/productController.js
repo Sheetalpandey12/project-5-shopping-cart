@@ -1,5 +1,5 @@
 const productModel = require("../models/productModel")
-const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId, isEmpty, isValidStyle } = require("../util/validator")
+const { isValidNum, isValidTitleEnum, isValidTD, isValidPrice, isValidfile, validObjectId, isEmpty, isValidStyle, isValidDes } = require("../util/validator")
 const { uploadFile } = require("../aws/aws")
 
 // <==========================================> CREATE PRODUCT <==========================================>//
@@ -19,14 +19,14 @@ const createProduct = async (req, res) => {
         if (findtitle) return res.status(400).send({ status: false, message: " this title already exists" })
 
         if (!isEmpty(description)) return res.status(400).send({ status: false, message: "description is mandatory" });
-        if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
+       // if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
 
         if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
         if (!isValidNum(price) && !isValidPrice(price)) return res.status(400).send({ status: false, message: "Price should be in Number" })
 
         if (!isEmpty(currencyId)) return res.status(400).send({ status: false, message: "currencyId is mandatory" })
         if (currencyId && currencyId != "INR") return res.status(400).send({ status: false, message: "Only 'INR' CurrencyId is allowed" })
-
+ 
         if (!isEmpty(currencyFormat)) return res.status(400).send({ status: false, message: "currencyFormat is mandatory" })
         if (currencyFormat && currencyFormat != "₹") return res.status(400).send({ status: false, message: "Only '₹' Currency Symbol is allowed" })
 
@@ -67,8 +67,6 @@ const getProductsByQuery = async (req, res) => {
         let Query = req.query
         let filter = { isDeleted: false }
         let { size, name, priceLessThan, priceGreaterThan, priceSort } = Query
-
-        if (Object.keys(Query).length === 0) return res.status(400).send({ status: false, message: "Please give some parameters." })
 
         if (size) {
             size = size.trim().toUpperCase()
@@ -155,7 +153,7 @@ const updateProductById = async (req, res) => {
         }
         if (description || description == "") {
             if (!isEmpty(description)) return res.status(400).send({ status: false, message: "description is mandatory" });
-            if (!isValidTD(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
+          //  if (!isValidstring(description)) return res.status(400).send({ status: false, message: "description should be in alphabets only" })
         }
         if (price || price == "") {
             if (!isEmpty(price)) return res.status(400).send({ status: false, message: "Price is mandatory" })
