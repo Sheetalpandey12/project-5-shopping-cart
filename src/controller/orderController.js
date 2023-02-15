@@ -107,3 +107,35 @@ const updateOrder = async (req, res) => {
 
 
 module.exports = { creatOrder, updateOrder }
+
+
+
+
+let data={
+    class:"first",
+    address:"delhi"
+
+}
+let data2= data
+data2.class="second"
+console.log(data)
+console.log(data2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
